@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "moduleResolution": "node",
+        "allowJs": false,
+        "strict": true,
+        "esModuleInterop": true,
+        "jsx": "react",
+        "module": "ES2015",
+        "skipLibCheck": true,
+        "isolatedModules": false,
+        "outDir": "./dist"
+    }
+}

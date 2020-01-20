@@ -1,0 +1,43 @@
+{
+  "name": "crpg-map-tool",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Anders Hellerup Madsen <ahm@issuu.com>",
+  "license": "MIT",
+  "scripts": {
+    "storybook": "start-storybook"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
+    "@babel/register": "^7.8.3",
+    "@storybook/addon-actions": "^5.3.6",
+    "@storybook/addon-info": "^5.3.6",
+    "@storybook/react": "^5.3.6",
+    "@types/jest": "^24.9.0",
+    "@types/styled-components": "^4.4.2",
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-styled-components": "^1.10.6",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.0",
+    "jest": "^24.9.0",
+    "jest-environment-jsdom-global": "^1.2.0",
+    "prettier": "^1.19.1",
+    "prettier-eslint": "^9.0.1",
+    "react-docgen-typescript-loader": "^3.6.0",
+    "ts-jest": "^24.3.0",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5"
+  },
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-is": "^16.12.0",
+    "styled-components": "^5.0.0"
+  }
+}
