@@ -3,16 +3,20 @@ import { Edge as TEdge } from '../map-model';
 
 const Wall = () => <line x1={0} x2={1} y1={0} y2={0} />;
 
-const Door = () => {
-    const left = 0.333;
-    const right = 0.666;
-    const top = 0.1;
-    const bottom = -0.1;
+const Door = ({ strokeWidth }: { strokeWidth: number }) => {
     return (
         <React.Fragment>
-            <Wall />
-            <line x1={left} x2={left} y1={top} y2={bottom} />
-            <line x1={right} x2={right} y1={top} y2={bottom} />
+            <line x1={0} x2={1} y1={0} y2={0} />
+            <rect
+                stroke="black"
+                fill="white"
+                strokeWidth={strokeWidth}
+                width={0.6}
+                height={0.2}
+                rx={0.05}
+                x={0.2}
+                y={-0.1}
+            />
         </React.Fragment>
     );
 };
@@ -22,12 +26,12 @@ type Props = {
     y: number;
     value: TEdge;
     rotate?: boolean;
-    strokeWidth?: number;
+    strokeWidth: number;
 };
 
 export const Edge = ({ x, y, value, rotate, strokeWidth }: Props) => (
     <g strokeWidth={strokeWidth} transform={`translate(${x}, ${y}) ${rotate ? 'rotate(90)' : ''}`}>
         {value === 'wall' && <Wall />}
-        {value === 'door' && <Door />}
+        {value === 'door' && <Door strokeWidth={strokeWidth / 2} />}
     </g>
 );

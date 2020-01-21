@@ -1,5 +1,6 @@
 {
-  "name": "crpg-map-tool",
+  "name": "tarjan-map-tool",
+  "description": "Grid based map tool for mapping dungeons in old CRPGs. Named after the Mad God in the original Bard's Tale to give you an idea of what kind of games it is intended to map",
   "version": "0.0.1",
   "main": "index.js",
   "author": "Anders Hellerup Madsen <ahm@issuu.com>",

@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const Map = ({ model }: Props) => (
-    <svg viewBox={`0 0 ${model.width * unit} ${model.height * unit}`}>
+    <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
         <g fill="#ccc">
             <GridPoints width={model.width} height={model.height} />
         </g>
