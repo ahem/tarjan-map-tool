@@ -1,3 +1,5 @@
+import { set2d, map2d, flatmap2d } from './2d-array-utils';
+
 export type Edge = 'unknown' | 'empty' | 'door' | 'wall';
 
 export type Floor = 'unknown' | 'floor';
@@ -34,33 +36,6 @@ export function init(width: number, height: number): MapModel {
     };
 }
 
-function _map<T>(
-    arr: ReadonlyArray<ReadonlyArray<T>>,
-    f: (x: number, y: number, value: T) => T,
-): ReadonlyArray<ReadonlyArray<T>> {
-    return arr.map((row, rowIdx) =>
-        row.map((existingValue, colIdx) => f(colIdx, rowIdx, existingValue)),
-    );
-}
-
-function _set<T>(
-    arr: ReadonlyArray<ReadonlyArray<T>>,
-    x: number,
-    y: number,
-    value: T,
-): ReadonlyArray<ReadonlyArray<T>> {
-    return _map(arr, (colIdx, rowIdx, existingValue) =>
-        colIdx === x && rowIdx === y ? value : existingValue,
-    );
-}
-
-function _flatMap<T, R>(
-    arr: ReadonlyArray<ReadonlyArray<T>>,
-    f: (x: number, y: number, value: T) => R,
-): ReadonlyArray<R> {
-    return arr.reduce<R[]>((acc, row, y) => acc.concat(row.map((val, x) => f(x, y, val))), []);
-}
-
 export function getCell(t: MapModel, x: number, y: number): Cell {
     return {
         floor: t.floors[y][x],
@@ -72,22 +47,22 @@ export function getCell(t: MapModel, x: number, y: number): Cell {
 }
 
 export function setHorizontalEdge(t: MapModel, x: number, y: number, value: Edge): MapModel {
-    return { ...t, horizontalEdges: _set(t.horizontalEdges, x, y, value) };
+    return { ...t, horizontalEdges: set2d(t.horizontalEdges, x, y, value) };
 }
 
 export function setVerticalEdge(t: MapModel, x: number, y: number, value: Edge): MapModel {
-    return { ...t, verticalEdges: _set(t.verticalEdges, x, y, value) };
+    return { ...t, verticalEdges: set2d(t.verticalEdges, x, y, value) };
 }
 
 export function setFloor(t: MapModel, x: number, y: number, value: Floor): MapModel {
-    return { ...t, floors: _set(t.floors, x, y, value) };
+    return { ...t, floors: set2d(t.floors, x, y, value) };
 }
 
 export function setCell(t: MapModel, x: number, y: number, cell: Cell): MapModel {
     return {
         ...t,
-        floors: _set(t.floors, x, y, cell.floor),
-        horizontalEdges: _map(t.horizontalEdges, (colIdx, rowIdx, existingValue) => {
+        floors: set2d(t.floors, x, y, cell.floor),
+        horizontalEdges: map2d(t.horizontalEdges, (existingValue, colIdx, rowIdx) => {
             if (colIdx === x && rowIdx === y) {
                 return cell.north;
             } else if (colIdx === x && rowIdx === y + 1) {
@@ -96,7 +71,7 @@ export function setCell(t: MapModel, x: number, y: number, cell: Cell): MapModel
                 return existingValue;
             }
         }),
-        verticalEdges: _map(t.verticalEdges, (colIdx, rowIdx, existingValue) => {
+        verticalEdges: map2d(t.verticalEdges, (existingValue, colIdx, rowIdx) => {
             if (colIdx === x && rowIdx === y) {
                 return cell.west;
             } else if (colIdx === x + 1 && rowIdx === y) {
@@ -106,22 +81,4 @@ export function setCell(t: MapModel, x: number, y: number, cell: Cell): MapModel
             }
         }),
     };
-}
-
-export function mapHorizontalEdges<T>(
-    t: MapModel,
-    cb: (args: { x: number; y: number; value: Edge }) => T,
-) {
-    return _flatMap(t.horizontalEdges, (x, y, value) => cb({ x, y, value }));
-}
-
-export function mapVerticalEdges<T>(
-    t: MapModel,
-    cb: (args: { x: number; y: number; value: Edge }) => T,
-) {
-    return _flatMap(t.verticalEdges, (x, y, value) => cb({ x, y, value }));
-}
-
-export function mapFloors<T>(t: MapModel, cb: (args: { x: number; y: number; value: Floor }) => T) {
-    return _flatMap(t.floors, (x, y, value) => cb({ x, y, value }));
 }
