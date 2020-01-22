@@ -3,6 +3,7 @@ import React from 'react';
 import { MapModel } from '../map-model';
 import { Edge } from './Edge';
 import { flatmap2d } from '../2d-array-utils';
+import { Cursor, Direction } from './Cursor';
 
 const unit = 40;
 
@@ -18,9 +19,14 @@ const GridPoints = ({ width, height }: { width: number; height: number }) => {
 
 type Props = {
     model: MapModel;
+    cursor?: {
+        x: number;
+        y: number;
+        direction: Direction;
+    };
 };
 
-export const Map = ({ model }: Props) => (
+export const Map = ({ model, cursor }: Props) => (
     <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
         <g fill="#ccc">
             <GridPoints width={model.width} height={model.height} />
@@ -33,5 +39,10 @@ export const Map = ({ model }: Props) => (
                 <Edge key={`v:${x}:${y}`} value={value} x={x} y={y} strokeWidth={2 / unit} rotate />
             ))}
         </g>
+        {cursor && (
+            <g transform={`scale(${unit})`}>
+                <Cursor {...cursor} strokeWidth={1 / unit} />
+            </g>
+        )}
     </svg>
 );
