@@ -1,4 +1,5 @@
 import React from 'react';
+import { primary, primaryLight } from '../colors';
 
 export type Direction = 'north' | 'east' | 'west' | 'south';
 
@@ -21,8 +22,8 @@ export const Cursor = ({
     } as const)[direction];
     return (
         <g
-            stroke="orange"
-            fill="red"
+            stroke={primaryLight}
+            fill={primary}
             transform={`translate(${x + 0.5},${y + 0.5})`}
             strokeWidth={strokeWidth}
         >

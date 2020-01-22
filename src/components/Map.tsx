@@ -4,6 +4,7 @@ import { MapModel } from '../map-model';
 import { Edge } from './Edge';
 import { flatmap2d } from '../2d-array-utils';
 import { Cursor, Direction } from './Cursor';
+import { secondaryDark, backgroundLight } from '../colors';
 
 const unit = 40;
 
@@ -27,8 +28,11 @@ type Props = {
 };
 
 export const Map = ({ model, cursor }: Props) => (
-    <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
-        <g fill="#ccc">
+    <svg
+        viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}
+        style={{ background: backgroundLight }}
+    >
+        <g fill={secondaryDark}>
             <GridPoints width={model.width} height={model.height} />
         </g>
         <g stroke="black" transform={`scale(${unit})`}>
