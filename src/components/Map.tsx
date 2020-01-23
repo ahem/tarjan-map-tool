@@ -4,7 +4,7 @@ import { MapModel } from '../map-model';
 import { Edge } from './Edge';
 import { flatmap2d } from '../2d-array-utils';
 import { Cursor, Direction } from './Cursor';
-import { secondaryDark, backgroundLight } from '../colors';
+import { secondaryDark, backgroundLight } from '../design-tokens';
 
 const unit = 40;
 

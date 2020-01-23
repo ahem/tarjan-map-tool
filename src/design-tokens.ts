@@ -9,3 +9,5 @@ export const secondaryDark = '#cbc26d';
 export const background = '#e1e2e1';
 export const backgroundLight = '#f5f5f6';
 export const textColor = '#000000';
+
+export const fontFamily = 'Titillium Web';

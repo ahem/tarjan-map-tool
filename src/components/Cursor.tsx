@@ -1,5 +1,5 @@
 import React from 'react';
-import { primary, primaryLight } from '../colors';
+import { primary, primaryLight } from '../design-tokens';
 
 export type Direction = 'north' | 'east' | 'west' | 'south';
 

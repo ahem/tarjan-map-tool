@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { primary, primaryDark, primaryLight, background } from '../colors';
+import { primary, primaryLight, background, fontFamily } from '../design-tokens';
 
 const Root = styled.div`
     display: flex;
@@ -36,19 +36,19 @@ const MapContainer = styled.div`
 `;
 
 const Header = styled.h2`
-    font-family: 'Titillium Web';
+    font-family: '${fontFamily}';
     font-size: 20px;
     font-weight: 600;
 `;
 
 const SubHeader = styled.h3`
-    font-family: 'Titillium Web';
+    font-family: '${fontFamily}';
     font-size: 14px;
     font-weight: 600;
 `;
 
 const HoverPosition = styled.span`
-    font-family: 'Titillium Web';
+    font-family: '${fontFamily}';
     font-size: 14px;
     font-weight: 600;
     margin: 6px;
@@ -60,7 +60,7 @@ const List = styled.ul`
 `;
 
 const Item = styled.li<{ selected?: boolean }>`
-    font-family: 'Titillium Web';
+    font-family: '${fontFamily}';
     font-size: 14px;
     font-weight: normal;
     list-style: none;
