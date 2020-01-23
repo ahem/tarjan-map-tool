@@ -1,4 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
+import { secondary } from '../design-tokens';
+
 import { Edge as TEdge } from '../map-model';
 
 const Wall = () => <line x1={0} x2={1} y1={0} y2={0} />;
@@ -29,9 +32,19 @@ type Props = {
     strokeWidth: number;
 };
 
+const HoverMarker = styled.rect.attrs({ x: 0, y: -0.05, width: 1, height: 0.1 })`
+    fill: ${secondary};
+    stroke: ${secondary};
+    opacity: 0;
+    &:hover {
+        opacity: 0.9;
+    }
+`;
+
 export const Edge = ({ x, y, value, rotate, strokeWidth }: Props) => (
     <g strokeWidth={strokeWidth} transform={`translate(${x}, ${y}) ${rotate ? 'rotate(90)' : ''}`}>
         {value === 'wall' && <Wall />}
         {value === 'door' && <Door strokeWidth={strokeWidth / 2} />}
+        <HoverMarker />
     </g>
 );

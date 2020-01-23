@@ -1,10 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import { MapModel } from '../map-model';
 import { Edge } from './Edge';
 import { flatmap2d } from '../2d-array-utils';
 import { Cursor, Direction } from './Cursor';
-import { secondaryDark, backgroundLight } from '../design-tokens';
+import { secondary, secondaryDark, backgroundLight } from '../design-tokens';
 
 const unit = 40;
 
@@ -18,6 +19,12 @@ const GridPoints = ({ width, height }: { width: number; height: number }) => {
     return <React.Fragment>{elements}</React.Fragment>;
 };
 
+const Floor = styled.rect`
+    &:hover {
+        fill: ${secondary};
+    }
+`;
+
 type Props = {
     model: MapModel;
     cursor?: {
@@ -28,10 +35,23 @@ type Props = {
 };
 
 export const Map = ({ model, cursor }: Props) => (
-    <svg
-        viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}
-        style={{ background: backgroundLight }}
-    >
+    <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
+        <g transform={`scale(${unit})`}>
+            {flatmap2d(model.floors, (value, x, y) => {
+                const col = value === 'floor' ? 'white' : backgroundLight;
+                return (
+                    <Floor
+                        strokeWidth={1 / unit}
+                        fill={col}
+                        stroke={col}
+                        x={x}
+                        y={y}
+                        width={1}
+                        height={1}
+                    />
+                );
+            })}
+        </g>
         <g fill={secondaryDark}>
             <GridPoints width={model.width} height={model.height} />
         </g>

@@ -1,4 +1,4 @@
-import { set2d, map2d, flatmap2d } from './2d-array-utils';
+import { set2d, map2d } from './2d-array-utils';
 
 export type Edge = 'unknown' | 'empty' | 'door' | 'wall';
 

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { primary, primaryLight, background, fontFamily } from '../design-tokens';
+import { MapModel } from '../map-model';
 
 const Root = styled.div`
     display: flex;
@@ -73,6 +74,7 @@ const Item = styled.li<{ selected?: boolean }>`
 `;
 
 type Props = {
+    currentMap?: MapModel;
     projectName: string;
     projects: { name: string; id: number; selected?: boolean }[];
     maps: { name: string; id: number; selected?: boolean }[];
