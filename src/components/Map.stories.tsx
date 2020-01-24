@@ -1,4 +1,5 @@
 import React from 'react';
+import { action } from '@storybook/addon-actions';
 import { Map } from './Map';
 import { init, MapModel } from '../map-model';
 
@@ -6,7 +7,11 @@ export default { title: 'Map' };
 
 export const empty = () => (
     <div style={{ maxWidth: 480 }}>
-        <Map model={init(4, 4)} />
+        <Map
+            model={init(4, 4)}
+            onFloorClick={action('floor click')}
+            onEdgeClick={action('edge click')}
+        />
     </div>
 );
 
@@ -39,7 +44,11 @@ const exampleModel: MapModel = {
 
 export const example = () => (
     <div style={{ maxWidth: 480 }}>
-        <Map model={exampleModel} />
+        <Map
+            model={exampleModel}
+            onFloorClick={action('floor click')}
+            onEdgeClick={action('edge click')}
+        />
     </div>
 );
 

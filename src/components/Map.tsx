@@ -1,11 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useCallback } from 'react';
 
 import { MapModel } from '../map-model';
 import { Edge } from './Edge';
 import { flatmap2d } from '../2d-array-utils';
 import { Cursor, Direction } from './Cursor';
-import { secondary, secondaryDark, backgroundLight } from '../design-tokens';
+import { Floor } from './Floor';
+import { secondaryDark } from '../design-tokens';
 
 const unit = 40;
 
@@ -13,17 +13,24 @@ const GridPoints = ({ width, height }: { width: number; height: number }) => {
     const elements: JSX.Element[] = [];
     for (let y = 0; y < height + 1; y++) {
         for (let x = 0; x < width + 1; x++) {
-            elements.push(<circle r={1} cx={x * unit} cy={y * unit} />);
+            elements.push(<circle key={`${x}:${y}`} r={1} cx={x * unit} cy={y * unit} />);
         }
     }
     return <React.Fragment>{elements}</React.Fragment>;
 };
 
-const Floor = styled.rect`
-    &:hover {
-        fill: ${secondary};
+function getCoords(e: React.MouseEvent<SVGGElement, MouseEvent>) {
+    if (
+        e.target instanceof Element &&
+        e.target.hasAttribute('data-x') &&
+        e.target.hasAttribute('data-y')
+    ) {
+        return {
+            x: Number(e.target.getAttribute('data-x')),
+            y: Number(e.target.getAttribute('data-y')),
+        };
     }
-`;
+}
 
 type Props = {
     model: MapModel;
@@ -32,41 +39,72 @@ type Props = {
         y: number;
         direction: Direction;
     };
+    onFloorClick?: (x: number, y: number) => void;
+    onEdgeClick?: (x: number, y: number, orientation: 'horizontal' | 'vertical') => void;
 };
 
-export const Map = ({ model, cursor }: Props) => (
-    <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
-        <g transform={`scale(${unit})`}>
-            {flatmap2d(model.floors, (value, x, y) => {
-                const col = value === 'floor' ? 'white' : backgroundLight;
-                return (
-                    <Floor
-                        strokeWidth={1 / unit}
-                        fill={col}
-                        stroke={col}
-                        x={x}
-                        y={y}
-                        width={1}
-                        height={1}
-                    />
-                );
-            })}
-        </g>
-        <g fill={secondaryDark}>
-            <GridPoints width={model.width} height={model.height} />
-        </g>
-        <g stroke="black" transform={`scale(${unit})`}>
-            {flatmap2d(model.horizontalEdges, (value, x, y) => (
-                <Edge key={`h:${x}:${y}`} value={value} x={x} y={y} strokeWidth={2 / unit} />
-            ))}
-            {flatmap2d(model.verticalEdges, (value, x, y) => (
-                <Edge key={`v:${x}:${y}`} value={value} x={x} y={y} strokeWidth={2 / unit} rotate />
-            ))}
-        </g>
-        {cursor && (
-            <g transform={`scale(${unit})`}>
-                <Cursor {...cursor} strokeWidth={1 / unit} />
+export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
+    const handleFloorClick = useCallback(
+        (e: React.MouseEvent<SVGGElement, MouseEvent>) => {
+            const coords = getCoords(e);
+            coords && onFloorClick && onFloorClick(coords.x, coords.y);
+        },
+        [onFloorClick],
+    );
+    const handleHorizontalEdgeClick = useCallback(
+        (e: React.MouseEvent<SVGGElement, MouseEvent>) => {
+            const coords = getCoords(e);
+            coords && onEdgeClick && onEdgeClick(coords.x, coords.y, 'horizontal');
+        },
+        [onEdgeClick],
+    );
+    const handleVerticalEdgeClick = useCallback(
+        (e: React.MouseEvent<SVGGElement, MouseEvent>) => {
+            const coords = getCoords(e);
+            coords && onEdgeClick && onEdgeClick(coords.x, coords.y, 'vertical');
+        },
+        [onEdgeClick],
+    );
+    return (
+        <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
+            <g transform={`scale(${unit})`} onClick={handleFloorClick}>
+                {flatmap2d(model.floors, (value, x, y) => {
+                    return <Floor key={`${x}:${y}`} x={x} y={y} value={value} />;
+                })}
             </g>
-        )}
-    </svg>
-);
+            <g fill={secondaryDark}>
+                <GridPoints width={model.width} height={model.height} />
+            </g>
+            <g stroke="black" transform={`scale(${unit})`}>
+                <g onClick={handleHorizontalEdgeClick}>
+                    {flatmap2d(model.horizontalEdges, (value, x, y) => (
+                        <Edge
+                            key={`h:${x}:${y}`}
+                            value={value}
+                            x={x}
+                            y={y}
+                            strokeWidth={2 / unit}
+                        />
+                    ))}
+                </g>
+                <g onClick={handleVerticalEdgeClick}>
+                    {flatmap2d(model.verticalEdges, (value, x, y) => (
+                        <Edge
+                            key={`v:${x}:${y}`}
+                            value={value}
+                            x={x}
+                            y={y}
+                            strokeWidth={2 / unit}
+                            rotate
+                        />
+                    ))}
+                </g>
+            </g>
+            {cursor && (
+                <g transform={`scale(${unit})`}>
+                    <Cursor {...cursor} strokeWidth={1 / unit} />
+                </g>
+            )}
+        </svg>
+    );
+};

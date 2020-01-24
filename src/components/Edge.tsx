@@ -45,6 +45,6 @@ export const Edge = ({ x, y, value, rotate, strokeWidth }: Props) => (
     <g strokeWidth={strokeWidth} transform={`translate(${x}, ${y}) ${rotate ? 'rotate(90)' : ''}`}>
         {value === 'wall' && <Wall />}
         {value === 'door' && <Door strokeWidth={strokeWidth / 2} />}
-        <HoverMarker />
+        <HoverMarker data-x={x} data-y={y} />
     </g>
 );
