@@ -1,3 +1,18 @@
+export function init2d<T>(
+    width: number,
+    height: number,
+    f: () => T,
+): ReadonlyArray<ReadonlyArray<T>> {
+    let arr: T[][] = [];
+    for (let y = 0; y < height; y++) {
+        arr[y] = [];
+        for (let x = 0; x < width; x++) {
+            arr[y][x] = f();
+        }
+    }
+    return arr;
+}
+
 export function map2d<T, R>(
     arr: ReadonlyArray<ReadonlyArray<T>>,
     f: (value: T, x: number, y: number, arr: ReadonlyArray<ReadonlyArray<T>>) => R,

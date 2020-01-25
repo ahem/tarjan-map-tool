@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { primary, primaryLight, background, fontFamily } from '../design-tokens';
+import { primary, primaryLight, fontFamily } from '../design-tokens';
 import { MapModel } from '../map-model';
+import { Map } from './Map';
+import { Notes } from './Notes';
 
 const Root = styled.div`
     display: flex;
@@ -13,7 +15,7 @@ const Root = styled.div`
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
 `;
 
 const Sidebar = styled.div`
@@ -31,9 +33,24 @@ const Infobar = styled.div`
     justify-content: space-between;
 `;
 
-const MapContainer = styled.div`
-    background-color: ${background};
+const ContentArea = styled.div`
+    background-color: white;
     flex: 1 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+`;
+
+const MapWrapper = styled.div`
+    max-width: 550px;
+    min-width: 200px;
+    margin: 24px 0 24px 24px;
+    flex: 3 1 auto;
+`;
+
+const NoteWrapper = styled.div`
+    margin: 24px;
+    flex: 1 1 200px;
+    min-width: 200px;
 `;
 
 const Header = styled.h2`
@@ -74,28 +91,31 @@ const Item = styled.li<{ selected?: boolean }>`
 `;
 
 type Props = {
-    currentMap?: MapModel;
-    projectName: string;
-    projects: { name: string; id: number; selected?: boolean }[];
-    maps: { name: string; id: number; selected?: boolean }[];
-    mapName: string;
     hoverPosition: { x: number; y: number };
-    onMapClick: (id: number) => void;
-    onProjectClick: (id: number) => void;
+    mapModel: MapModel;
+    mapName: string;
+    maps: { name: string; id: number; selected?: boolean }[];
+    notes: string[];
     onAddMapClick: () => void;
     onAddProjectClick: () => void;
+    onMapClick: (id: number) => void;
+    onProjectClick: (id: number) => void;
+    projectName: string;
+    projects: { name: string; id: number; selected?: boolean }[];
 };
 
 export const Main = ({
-    projectName,
-    mapName,
-    projects,
-    maps,
     hoverPosition,
+    mapModel,
+    mapName,
+    maps,
+    notes,
+    onAddMapClick,
+    onAddProjectClick,
     onMapClick,
     onProjectClick,
-    onAddProjectClick,
-    onAddMapClick,
+    projectName,
+    projects,
 }: Props) => {
     return (
         <Root>
@@ -133,7 +153,14 @@ export const Main = ({
                         </HoverPosition>
                     )}
                 </Infobar>
-                <MapContainer>Map goes here...</MapContainer>
+                <ContentArea>
+                    <MapWrapper>
+                        <Map model={mapModel} />
+                    </MapWrapper>
+                    <NoteWrapper>
+                        <Notes notes={notes} />
+                    </NoteWrapper>
+                </ContentArea>
             </Wrapper>
         </Root>
     );

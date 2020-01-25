@@ -1,8 +1,8 @@
-import { set2d, map2d } from './2d-array-utils';
+import { init2d, set2d, map2d } from './2d-array-utils';
 
 export type Edge = 'unknown' | 'empty' | 'door' | 'wall';
 
-export type Floor = 'unknown' | 'floor';
+export type Floor = 'unknown' | 'floor' | 'darkness';
 
 export type Cell = {
     readonly floor: Floor;
@@ -28,29 +28,12 @@ export type MapModel = {
 
 export function init(width: number, height: number): MapModel {
     return {
-        floors: new Array<Floor[]>(height)
-            .fill([])
-            .map(() => new Array<Floor>(width).fill('unknown')),
-        horizontalEdges: new Array<Edge[]>(height + 1)
-            .fill([])
-            .map(() => new Array<Edge>(width).fill('unknown')),
-        verticalEdges: new Array<Edge[]>(height)
-            .fill([])
-            .map(() => new Array<Edge>(width + 1).fill('unknown')),
+        floors: init2d(width, height, () => 'unknown'),
+        horizontalEdges: init2d(width, height + 1, () => 'unknown'),
+        verticalEdges: init2d(width + 1, height, () => 'unknown'),
         texts: [],
         width,
         height,
-    };
-}
-
-export function getCell(t: MapModel, x: number, y: number): Cell {
-    return {
-        floor: t.floors[y][x],
-        north: t.horizontalEdges[y][x],
-        south: t.horizontalEdges[y + 1][x],
-        west: t.verticalEdges[y][x],
-        east: t.verticalEdges[y][x + 1],
-        text: t.texts.find(o => o.x === x && o.y === y)?.value,
     };
 }
 
@@ -94,5 +77,16 @@ export function setCell(t: MapModel, x: number, y: number, cell: Cell): MapModel
             }
         }),
         texts: cell.text ? texts.concat({ x, y, value: cell.text }) : texts,
+    };
+}
+
+export function getCell(t: MapModel, x: number, y: number): Cell {
+    return {
+        floor: t.floors[y][x],
+        north: t.horizontalEdges[y][x],
+        south: t.horizontalEdges[y + 1][x],
+        west: t.verticalEdges[y][x],
+        east: t.verticalEdges[y][x + 1],
+        text: t.texts.find(o => o.x === x && o.y === y)?.value,
     };
 }

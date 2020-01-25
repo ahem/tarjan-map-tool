@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { fontFamily } from '../design-tokens';
+
 const Wrapper = styled.div`
     position: relative;
     color: black;
@@ -9,6 +11,7 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
+    font-family: ${fontFamily};
 `;
 
 type Props = {
@@ -20,7 +23,7 @@ type Props = {
 };
 
 function calculateMaxFontSize(el: HTMLDivElement) {
-    const box = el.parentElement?.getBoundingClientRect();
+    const box = el?.parentElement?.getBoundingClientRect();
     if (!box) return;
     const maxWidth = box.width * 0.8;
     const maxHeight = box.height * 0.8;

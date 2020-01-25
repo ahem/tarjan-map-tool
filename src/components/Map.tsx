@@ -4,7 +4,7 @@ import { MapModel } from '../map-model';
 import { Edge } from './Edge';
 import { flatmap2d } from '../2d-array-utils';
 import { Cursor, Direction } from './Cursor';
-import { Floor } from './Floor';
+import { Floor, FloorPatterns } from './Floor';
 import { secondaryDark } from '../design-tokens';
 
 const unit = 40;
@@ -67,12 +67,13 @@ export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
     );
     return (
         <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
+            <FloorPatterns />
             <g onClick={handleFloorClick}>
                 {flatmap2d(model.floors, (value, x, y) => (
                     <Floor
                         key={`${x}:${y}`}
-                        x={x * unit}
-                        y={y * unit}
+                        x={x}
+                        y={y}
                         size={unit}
                         value={value}
                         text={model.texts.find(o => o.x === x && o.y === y)?.value}
