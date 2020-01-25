@@ -6,5 +6,5 @@ module.exports = {
     testEnvironment: require.resolve('jest-environment-jsdom-global'),
     rootDir: '.',
     coveragePathIgnorePatterns: ['<rootDir>/node_modules/'],
-    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.yarncache/'],
+    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.yarncache/', '<rootDir>/dist'],
 };

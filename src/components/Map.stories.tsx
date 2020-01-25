@@ -38,6 +38,7 @@ const exampleModel: MapModel = {
         ['empty', 'door', 'empty', 'empty', 'door'],
         ['wall', 'door', 'wall', 'empty', 'empty'],
     ],
+    texts: [],
     width: 5,
     height: 5,
 };
@@ -70,5 +71,18 @@ export const cursorWest = () => (
 export const cursorSouth = () => (
     <div style={{ maxWidth: 480 }}>
         <Map model={exampleModel} cursor={{ x: 2, y: 3, direction: 'south' }} />
+    </div>
+);
+export const withNotes = () => (
+    <div style={{ maxWidth: 480 }}>
+        <Map
+            model={{
+                ...exampleModel,
+                texts: [
+                    { x: 2, y: 2, value: '1' },
+                    { x: 3, y: 4, value: '2 3 4 hest' },
+                ],
+            }}
+        />
     </div>
 );

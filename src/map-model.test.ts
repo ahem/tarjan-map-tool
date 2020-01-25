@@ -1,5 +1,4 @@
 /* eslint-env jest */
-
 import { init, setFloor, setCell, getCell, Cell } from './map-model';
 
 describe('map-model', () => {
@@ -25,6 +24,7 @@ describe('map-model', () => {
                 ],
                 width: 2,
                 height: 3,
+                texts: [],
             };
             expect(model.floors).toEqual(expectedModel.floors);
             expect(model.horizontalEdges).toEqual(expectedModel.horizontalEdges);
@@ -53,6 +53,7 @@ describe('map-model', () => {
                     ['unknown', 'unknown', 'unknown', 'unknown', 'unknown'],
                     ['unknown', 'unknown', 'unknown', 'unknown', 'unknown'],
                 ],
+                texts: [],
                 width: 4,
                 height: 4,
             };

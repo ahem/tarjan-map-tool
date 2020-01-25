@@ -67,10 +67,17 @@ export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
     );
     return (
         <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
-            <g transform={`scale(${unit})`} onClick={handleFloorClick}>
-                {flatmap2d(model.floors, (value, x, y) => {
-                    return <Floor key={`${x}:${y}`} x={x} y={y} value={value} />;
-                })}
+            <g onClick={handleFloorClick}>
+                {flatmap2d(model.floors, (value, x, y) => (
+                    <Floor
+                        key={`${x}:${y}`}
+                        x={x * unit}
+                        y={y * unit}
+                        size={unit}
+                        value={value}
+                        text={model.texts.find(o => o.x === x && o.y === y)?.value}
+                    />
+                ))}
             </g>
             <g fill={secondaryDark}>
                 <GridPoints width={model.width} height={model.height} />

@@ -10,6 +10,7 @@ export type Cell = {
     readonly east: Edge;
     readonly south: Edge;
     readonly west: Edge;
+    readonly text?: string;
 };
 
 export type MapModel = {
@@ -18,6 +19,11 @@ export type MapModel = {
     readonly verticalEdges: ReadonlyArray<ReadonlyArray<Edge>>;
     readonly width: number;
     readonly height: number;
+    readonly texts: ReadonlyArray<{
+        readonly value: string;
+        readonly x: number;
+        readonly y: number;
+    }>;
 };
 
 export function init(width: number, height: number): MapModel {
@@ -31,6 +37,7 @@ export function init(width: number, height: number): MapModel {
         verticalEdges: new Array<Edge[]>(height)
             .fill([])
             .map(() => new Array<Edge>(width + 1).fill('unknown')),
+        texts: [],
         width,
         height,
     };
@@ -43,6 +50,7 @@ export function getCell(t: MapModel, x: number, y: number): Cell {
         south: t.horizontalEdges[y + 1][x],
         west: t.verticalEdges[y][x],
         east: t.verticalEdges[y][x + 1],
+        text: t.texts.find(o => o.x === x && o.y === y)?.value,
     };
 }
 
@@ -58,7 +66,12 @@ export function setFloor(t: MapModel, x: number, y: number, value: Floor): MapMo
     return { ...t, floors: set2d(t.floors, x, y, value) };
 }
 
+export function setText(t: MapModel, x: number, y: number, value: string): MapModel {
+    return { ...t, texts: t.texts.filter(o => o.x !== x && o.y !== y).concat({ x, y, value }) };
+}
+
 export function setCell(t: MapModel, x: number, y: number, cell: Cell): MapModel {
+    const texts = t.texts.filter(o => o.x !== x && o.y !== y);
     return {
         ...t,
         floors: set2d(t.floors, x, y, cell.floor),
@@ -80,5 +93,6 @@ export function setCell(t: MapModel, x: number, y: number, cell: Cell): MapModel
                 return existingValue;
             }
         }),
+        texts: cell.text ? texts.concat({ x, y, value: cell.text }) : texts,
     };
 }
