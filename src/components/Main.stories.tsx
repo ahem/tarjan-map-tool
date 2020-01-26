@@ -1,10 +1,23 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import { wineCellarModel } from '../example-maps';
+import { EditorState, ContentState } from 'draft-js';
+import { notesDecorator } from './Notes';
 
 import { Main } from './Main';
 
 export default { title: 'Main' };
+
+const notes = EditorState.createWithContent(
+    ContentState.createFromText(
+        [
+            '1: This is the wine cellar of the Scarlet Bard. The air is musty with old wine.',
+            '2: Fine wines - 10 years or older. For regular customers only.',
+            '3: Rare wines - 50 years and older. Keep out!',
+        ].join('\n'),
+    ),
+    notesDecorator,
+);
 
 export const Standard = () => (
     <>
@@ -14,11 +27,8 @@ export const Standard = () => (
         </style>
         <Main
             projectName="Bard’s Tale: Tales of the Unknown"
-            notes={[
-                '1) This is the wine cellar of the Scarlet Bard. The air is musty with old wine.',
-                '2) Fine wines - 10 years or older. For regular customers only.',
-                '3) Rare wines - 50 years and older. Keep out!',
-            ]}
+            notes={notes}
+            setNotes={() => {}}
             mapModel={wineCellarModel}
             mapName="Sewers Level 2"
             maps={[
