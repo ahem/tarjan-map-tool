@@ -14,16 +14,16 @@ export type Cell = {
 };
 
 export type MapModel = {
-    readonly floors: ReadonlyArray<ReadonlyArray<Floor>>;
-    readonly horizontalEdges: ReadonlyArray<ReadonlyArray<Edge>>;
-    readonly verticalEdges: ReadonlyArray<ReadonlyArray<Edge>>;
+    readonly floors: readonly (readonly Floor[])[];
+    readonly horizontalEdges: readonly (readonly Edge[])[];
+    readonly verticalEdges: readonly (readonly Edge[])[];
     readonly width: number;
     readonly height: number;
-    readonly texts: ReadonlyArray<{
+    readonly texts: readonly {
         readonly value: string;
         readonly x: number;
         readonly y: number;
-    }>;
+    }[];
 };
 
 export function init(width: number, height: number): MapModel {

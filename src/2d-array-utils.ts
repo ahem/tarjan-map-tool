@@ -1,8 +1,4 @@
-export function init2d<T>(
-    width: number,
-    height: number,
-    f: () => T,
-): ReadonlyArray<ReadonlyArray<T>> {
+export function init2d<T>(width: number, height: number, f: () => T): readonly (readonly T[])[] {
     let arr: T[][] = [];
     for (let y = 0; y < height; y++) {
         arr[y] = [];
@@ -14,18 +10,18 @@ export function init2d<T>(
 }
 
 export function map2d<T, R>(
-    arr: ReadonlyArray<ReadonlyArray<T>>,
-    f: (value: T, x: number, y: number, arr: ReadonlyArray<ReadonlyArray<T>>) => R,
-): ReadonlyArray<ReadonlyArray<R>> {
+    arr: readonly (readonly T[])[],
+    f: (value: T, x: number, y: number, arr: readonly (readonly T[])[]) => R,
+): readonly (readonly R[])[] {
     return arr.map((row, rowIdx) =>
         row.map((existingValue, colIdx) => f(existingValue, colIdx, rowIdx, arr)),
     );
 }
 
 export function flatmap2d<T, R>(
-    arr: ReadonlyArray<ReadonlyArray<T>>,
-    f: (value: T, x: number, y: number, arr: ReadonlyArray<ReadonlyArray<T>>) => R,
-): ReadonlyArray<R> {
+    arr: readonly (readonly T[])[],
+    f: (value: T, x: number, y: number, arr: readonly (readonly T[])[]) => R,
+): readonly R[] {
     return arr.reduce<R[]>(
         (acc, row, rowIdx) =>
             acc.concat(row.map((existingValue, colIdx) => f(existingValue, colIdx, rowIdx, arr))),
@@ -34,13 +30,12 @@ export function flatmap2d<T, R>(
 }
 
 export function set2d<T>(
-    arr: ReadonlyArray<ReadonlyArray<T>>,
+    arr: readonly (readonly T[])[],
     x: number,
     y: number,
     value: T,
-): ReadonlyArray<ReadonlyArray<T>> {
+): readonly (readonly T[])[] {
     return map2d(arr, (existingValue, colIdx, rowIdx) =>
         colIdx === x && rowIdx === y ? value : existingValue,
     );
 }
-
