@@ -3,9 +3,10 @@ import React, { useCallback } from 'react';
 import { MapModel } from '../map-model';
 import { Edge } from './Edge';
 import { flatmap2d } from '../2d-array-utils';
-import { Cursor, Direction } from './Cursor';
+import { Cursor } from './Cursor';
 import { Floor, FloorPatterns } from './Floor';
 import { secondaryDark } from '../design-tokens';
+import { Direction } from '../types';
 
 const unit = 40;
 

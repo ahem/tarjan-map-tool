@@ -25,13 +25,13 @@ const HoverPosition = styled.span`
 `;
 
 type Props = {
-    hoverPosition: { x: number; y: number };
-    mapName: string;
+    hoverPosition?: { x: number; y: number };
+    mapName?: string;
 };
 
 export const Infobar = ({ mapName, hoverPosition }: Props) => (
     <Root>
-        <SubHeader>{mapName}</SubHeader>
+        <SubHeader>{mapName ?? ''}</SubHeader>
         {hoverPosition && (
             <HoverPosition>
                 [{hoverPosition.x}, {hoverPosition.y}]

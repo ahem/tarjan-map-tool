@@ -9,8 +9,7 @@ import {
     Edge,
 } from './map-model';
 import { EditorState } from 'draft-js';
-
-type Direction = 'north' | 'south' | 'east' | 'west';
+import { Direction } from './types';
 
 type Map = {
     readonly id: number;
@@ -40,6 +39,7 @@ export type State = {
 type MapAction =
     | { type: 'SET_MAP_NAME'; name: string }
     | { type: 'SET_MAP_FLOOR'; x: number; y: number; value: Floor }
+    | { type: 'CHANGE_MAP_FLOOR'; x: number; y: number }
     | { type: 'SET_MAP_NOTES'; editorState: EditorState }
     | { type: 'SET_MAP_CELL_TEXT'; x: number; y: number; text: string }
     | {
@@ -48,6 +48,12 @@ type MapAction =
           y: number;
           orientation: 'horizontal' | 'vertical';
           value: Edge;
+      }
+    | {
+          type: 'CHANGE_MAP_EDGE';
+          x: number;
+          y: number;
+          orientation: 'horizontal' | 'vertical';
       };
 
 export type Action =
@@ -58,9 +64,15 @@ export type Action =
     | { type: 'SET_CURSOR'; x: number; y: number; direction: Direction }
     | MapAction;
 
+const floors: Floor[] = ['unknown', 'floor', 'darkness'];
+const edges: Edge[] = ['empty', 'wall', 'door'];
+
+const nextVal = <T>(values: readonly T[], val: T): T =>
+    values[(values.indexOf(val) + 1) % values.length];
+
 export const initialState: State = { maps: [], projects: [] };
 
-const mapReducer = (state: Map, action: Action): Map => {
+const mapReducer = (state: Map, action: MapAction): Map => {
     switch (action.type) {
         case 'SET_MAP_NAME':
             return { ...state, name: action.name };
@@ -72,6 +84,13 @@ const mapReducer = (state: Map, action: Action): Map => {
             return {
                 ...state,
                 model: setFloor(state.model, action.x, action.y, action.value),
+            };
+        }
+        case 'CHANGE_MAP_FLOOR': {
+            const { x, y } = action;
+            return {
+                ...state,
+                model: setFloor(state.model, x, y, nextVal(floors, state.model.floors[y][x])),
             };
         }
         case 'SET_MAP_EDGE': {
@@ -87,11 +106,26 @@ const mapReducer = (state: Map, action: Action): Map => {
                 };
             }
         }
+        case 'CHANGE_MAP_EDGE': {
+            const { x, y } = action;
+            if (action.orientation === 'horizontal') {
+                const value = nextVal(edges, state.model.horizontalEdges[y][x]);
+                return {
+                    ...state,
+                    model: setHorizontalEdge(state.model, action.x, action.y, value),
+                };
+            } else {
+                const value = nextVal(edges, state.model.verticalEdges[y][x]);
+                return {
+                    ...state,
+                    model: setVerticalEdge(state.model, action.x, action.y, value),
+                };
+            }
+        }
     }
-    return state;
 };
 
-export const reducer = (state: State = initialState, action: Action) => {
+export const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'SELECT_PROJECT':
             return { ...state, projectId: action.projectId };
@@ -125,7 +159,7 @@ export const reducer = (state: State = initialState, action: Action) => {
                     }),
                 };
             });
-            return { ...state, currentMapId: newMapId, projects };
+            return { ...state, mapId: newMapId, projects };
         }
         case 'SET_CURSOR':
             return {
@@ -136,12 +170,23 @@ export const reducer = (state: State = initialState, action: Action) => {
                     direction: action.direction,
                 },
             };
-        default:
+        case 'SET_MAP_NAME':
+        case 'SET_MAP_FLOOR':
+        case 'SET_MAP_NOTES':
+        case 'SET_MAP_CELL_TEXT':
+        case 'SET_MAP_EDGE':
+        case 'CHANGE_MAP_EDGE':
+        case 'CHANGE_MAP_FLOOR':
             return {
                 ...state,
                 projects: state.projects.map(p =>
                     p.id === state.projectId
-                        ? p.maps.map(m => (m.id === state.mapId ? mapReducer(m, action) : m))
+                        ? {
+                              ...p,
+                              maps: p.maps.map(m =>
+                                  m.id === state.mapId ? mapReducer(m, action) : m,
+                              ),
+                          }
                         : p,
                 ),
             };

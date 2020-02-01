@@ -7,4 +7,11 @@ module.exports = {
     rootDir: '.',
     coveragePathIgnorePatterns: ['<rootDir>/node_modules/'],
     testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.yarncache/', '<rootDir>/dist'],
+    globals: {
+        'ts-jest': {
+            diagnostics: {
+                ignoreCodes: ['TS151001'],
+            },
+        },
+    },
 };

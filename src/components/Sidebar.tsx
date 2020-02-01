@@ -41,13 +41,13 @@ const Item = styled.li<{ selected?: boolean }>`
 `;
 
 type Props = {
-    projectName: string;
-    maps: { name: string; id: number; selected?: boolean }[];
-    projects: { name: string; id: number; selected?: boolean }[];
-    onMapClick: (id: number) => void;
-    onProjectClick: (id: number) => void;
-    onAddMapClick: () => void;
-    onAddProjectClick: () => void;
+    projectName?: string;
+    maps: readonly { name: string; id: number; selected?: boolean }[];
+    projects: readonly { name: string; id: number; selected?: boolean }[];
+    onMapClick?: (id: number) => void;
+    onProjectClick?: (id: number) => void;
+    onAddMapClick?: () => void;
+    onAddProjectClick?: () => void;
 };
 
 export const Sidebar = ({
@@ -60,26 +60,30 @@ export const Sidebar = ({
     onAddProjectClick,
 }: Props) => (
     <Root>
-        <Header>{projectName}</Header>
+        <Header>{projectName || ''}</Header>
         <SubHeader>Maps</SubHeader>
         <List>
             {maps.map(({ name, id, selected }) => (
-                <Item key={id} selected={selected} onClick={() => onMapClick(id)}>
+                <Item key={id} selected={selected} onClick={onMapClick && (() => onMapClick(id))}>
                     {name}
                 </Item>
             ))}
-            <Item onClick={() => onAddMapClick()}>
+            <Item onClick={onAddMapClick}>
                 <i>[ add map ]</i>
             </Item>
         </List>
         <SubHeader>Projects</SubHeader>
         <List>
             {projects.map(({ name, id, selected }) => (
-                <Item key={id} selected={selected} onClick={() => onProjectClick(id)}>
+                <Item
+                    key={id}
+                    selected={selected}
+                    onClick={onProjectClick && (() => onProjectClick(id))}
+                >
                     {name}
                 </Item>
             ))}
-            <Item onClick={() => onAddProjectClick()}>
+            <Item onClick={onAddProjectClick}>
                 <i>[ add project ]</i>
             </Item>
         </List>

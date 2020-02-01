@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import { Floor as T } from '../map-model';
 import { Text } from './Text';
 
-import { secondary, backgroundLight } from '../design-tokens';
+import { secondaryDark, backgroundLight } from '../design-tokens';
 
 const Rect = styled.rect`
     &:hover {
-        fill: ${secondary};
+        stroke: ${secondaryDark};
+        stroke-width: 2px;
     }
 `;
 

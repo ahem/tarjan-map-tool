@@ -1,14 +1,14 @@
 {
     "compilerOptions": {
-        "target": "es2018",
-        "moduleResolution": "node",
-        "allowJs": false,
-        "strict": true,
         "esModuleInterop": true,
+        "incremental": true,
         "jsx": "react",
-        "module": "ES2015",
+        "module":"AMD",
+        "moduleResolution": "node",
+        "outFile": "./dist/bundle.js",
         "skipLibCheck": true,
-        "isolatedModules": false,
-        "outDir": "./dist"
+        "sourceMap": true,
+        "strict": true,
+        "target": "es2015"
     }
 }

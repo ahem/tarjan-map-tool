@@ -1,6 +1,6 @@
 import { init2d, set2d, map2d } from './2d-array-utils';
 
-export type Edge = 'unknown' | 'empty' | 'door' | 'wall';
+export type Edge = 'empty' | 'door' | 'wall';
 
 export type Floor = 'unknown' | 'floor' | 'darkness';
 
@@ -29,8 +29,8 @@ export type MapModel = {
 export function init(width: number, height: number): MapModel {
     return {
         floors: init2d(width, height, () => 'unknown'),
-        horizontalEdges: init2d(width, height + 1, () => 'unknown'),
-        verticalEdges: init2d(width + 1, height, () => 'unknown'),
+        horizontalEdges: init2d(width, height + 1, () => 'empty'),
+        verticalEdges: init2d(width + 1, height, () => 'empty'),
         texts: [],
         width,
         height,

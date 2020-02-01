@@ -1,7 +1,7 @@
 import React from 'react';
 import { primary, primaryLight } from '../design-tokens';
 
-export type Direction = 'north' | 'east' | 'west' | 'south';
+import { Direction } from '../types';
 
 export const Cursor = ({
     x,

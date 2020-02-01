@@ -6,6 +6,7 @@ import { Sidebar } from './Sidebar';
 import { Infobar } from './InfoBar';
 import { Map } from './Map';
 import { Notes } from './Notes';
+import { Direction } from '../types';
 
 const Root = styled.div`
     display: flex;
@@ -40,27 +41,37 @@ const NoteWrapper = styled.div`
 `;
 
 type Props = {
-    hoverPosition: { x: number; y: number };
-    mapModel: MapModel;
-    mapName: string;
-    maps: { name: string; id: number; selected?: boolean }[];
-    onAddMapClick: () => void;
-    onAddProjectClick: () => void;
-    onMapClick: (id: number) => void;
-    onProjectClick: (id: number) => void;
-    projectName: string;
-    projects: { name: string; id: number; selected?: boolean }[];
-    notes: React.ComponentProps<typeof Notes>['editorState'];
-    setNotes: React.ComponentProps<typeof Notes>['setEditorState'];
+    cursor?: {
+        direction: Direction;
+        x: number;
+        y: number;
+    };
+    hoverPosition?: { x: number; y: number };
+    mapModel?: MapModel;
+    mapName?: string;
+    maps: readonly { name: string; id: number; selected?: boolean }[];
+    onAddMapClick?: () => void;
+    onAddProjectClick?: () => void;
+    onEdgeClick?: (x: number, y: number, orientation: 'horizontal' | 'vertical') => void;
+    onFloorClick?: (x: number, y: number) => void;
+    onMapClick?: (id: number) => void;
+    onProjectClick?: (id: number) => void;
+    projectName?: string;
+    projects: readonly { name: string; id: number; selected?: boolean }[];
+    notes?: React.ComponentProps<typeof Notes>['editorState'];
+    setNotes?: React.ComponentProps<typeof Notes>['setEditorState'];
 };
 
 export const Main = ({
+    cursor,
     hoverPosition,
     mapModel,
     mapName,
     maps,
     onAddMapClick,
     onAddProjectClick,
+    onEdgeClick,
+    onFloorClick,
     onMapClick,
     onProjectClick,
     projectName,
@@ -83,10 +94,19 @@ export const Main = ({
                 <Infobar mapName={mapName} hoverPosition={hoverPosition} />
                 <ContentArea>
                     <MapWrapper>
-                        <Map model={mapModel} />
+                        {mapModel && (
+                            <Map
+                                model={mapModel}
+                                cursor={cursor}
+                                onFloorClick={onFloorClick}
+                                onEdgeClick={onEdgeClick}
+                            />
+                        )}
                     </MapWrapper>
                     <NoteWrapper>
-                        <Notes editorState={notes} setEditorState={setNotes} />
+                        {notes && setNotes && (
+                            <Notes editorState={notes} setEditorState={setNotes} />
+                        )}
                     </NoteWrapper>
                 </ContentArea>
             </Wrapper>
