@@ -12,15 +12,15 @@ describe('map-model', () => {
                     ['unknown', 'unknown'],
                 ],
                 horizontalEdges: [
-                    ['unknown', 'unknown'],
-                    ['unknown', 'unknown'],
-                    ['unknown', 'unknown'],
-                    ['unknown', 'unknown'],
+                    ['empty', 'empty'],
+                    ['empty', 'empty'],
+                    ['empty', 'empty'],
+                    ['empty', 'empty'],
                 ],
                 verticalEdges: [
-                    ['unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown'],
+                    ['empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty'],
                 ],
                 width: 2,
                 height: 3,
@@ -41,17 +41,17 @@ describe('map-model', () => {
                     ['unknown', 'unknown', 'unknown', 'unknown'],
                 ],
                 horizontalEdges: [
-                    ['unknown', 'unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown', 'unknown'],
+                    ['empty', 'empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty', 'empty'],
                 ],
                 verticalEdges: [
-                    ['unknown', 'unknown', 'unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown', 'unknown', 'unknown'],
-                    ['unknown', 'unknown', 'unknown', 'unknown', 'unknown'],
+                    ['empty', 'empty', 'empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty', 'empty', 'empty'],
+                    ['empty', 'empty', 'empty', 'empty', 'empty'],
                 ],
                 texts: [],
                 width: 4,
@@ -110,31 +110,31 @@ describe('map-model', () => {
                 ['unknown', 'floor'],
             ]);
             expect(model.horizontalEdges).toEqual([
-                ['unknown', 'unknown'],
-                ['unknown', 'unknown'],
-                ['unknown', 'wall'],
-                ['unknown', 'door'],
+                ['empty', 'empty'],
+                ['empty', 'empty'],
+                ['empty', 'wall'],
+                ['empty', 'door'],
             ]);
             expect(model.verticalEdges).toEqual([
-                ['unknown', 'unknown', 'unknown'],
-                ['unknown', 'unknown', 'unknown'],
-                ['unknown', 'door', 'empty'],
+                ['empty', 'empty', 'empty'],
+                ['empty', 'empty', 'empty'],
+                ['empty', 'door', 'empty'],
             ]);
 
             expect(getCell(model, 1, 2)).toEqual(cell);
             expect(getCell(model, 1, 1)).toEqual({
                 floor: 'unknown',
-                north: 'unknown',
+                north: 'empty',
                 south: 'wall',
-                east: 'unknown',
-                west: 'unknown',
+                east: 'empty',
+                west: 'empty',
             });
             expect(getCell(model, 0, 2)).toEqual({
                 floor: 'unknown',
-                north: 'unknown',
-                south: 'unknown',
+                north: 'empty',
+                south: 'empty',
                 east: 'door',
-                west: 'unknown',
+                west: 'empty',
             });
         });
     });
