@@ -9,7 +9,7 @@ import {
     Edge,
 } from './map-model';
 import { EditorState } from 'draft-js';
-import { Direction } from './types';
+import { Direction, Cursor } from './types';
 
 type Map = {
     readonly id: number;
@@ -25,14 +25,9 @@ type Project = {
 };
 
 export type State = {
-    readonly cursor?: {
-        readonly x: number;
-        readonly y: number;
-        readonly direction: Direction;
-    };
+    readonly cursor?: Cursor;
     readonly mapId?: number;
     readonly projectId?: number;
-    readonly maps: readonly Map[];
     readonly projects: readonly Project[];
 };
 
@@ -62,15 +57,20 @@ export type Action =
     | { type: 'SELECT_PROJECT'; projectId: number }
     | { type: 'SELECT_MAP'; mapId: number }
     | { type: 'SET_CURSOR'; x: number; y: number; direction: Direction }
+    | { type: 'TURN_CURSOR_LEFT' }
+    | { type: 'TURN_CURSOR_RIGHT' }
+    | { type: 'MOVE_CURSOR_FORWARD' }
+    | { type: 'CLEAR_CURSOR' }
     | MapAction;
 
 const floors: Floor[] = ['unknown', 'floor', 'darkness'];
 const edges: Edge[] = ['empty', 'wall', 'door'];
+const directions: Direction[] = ['north', 'east', 'south', 'west'];
 
 const nextVal = <T>(values: readonly T[], val: T): T =>
     values[(values.indexOf(val) + 1) % values.length];
 
-export const initialState: State = { maps: [], projects: [] };
+export const initialState: State = { projects: [] };
 
 const mapReducer = (state: Map, action: MapAction): Map => {
     switch (action.type) {
@@ -132,7 +132,7 @@ export const reducer = (state: State, action: Action): State => {
         case 'SELECT_MAP':
             return { ...state, mapId: action.mapId };
         case 'ADD_PROJECT': {
-            const id = Math.max(...state.projects.map(x => x.id)) + 1;
+            const id = state.projects.length ? Math.max(...state.projects.map(x => x.id)) + 1 : 1;
             return {
                 ...state,
                 projectId: id,
@@ -141,10 +141,8 @@ export const reducer = (state: State, action: Action): State => {
             };
         }
         case 'ADD_MAP': {
-            const newMapId = state.projects.reduce(
-                (acc, p) => Math.max(acc, ...p.maps.map(x => x.id)),
-                0,
-            );
+            const newMapId =
+                state.projects.reduce((acc, p) => Math.max(acc, ...p.maps.map(x => x.id)), 0) + 1;
             const projects = state.projects.map(p => {
                 if (p.id !== state.projectId) {
                     return p;
@@ -161,15 +159,43 @@ export const reducer = (state: State, action: Action): State => {
             });
             return { ...state, mapId: newMapId, projects };
         }
-        case 'SET_CURSOR':
-            return {
-                ...state,
-                cursor: {
-                    x: action.x,
-                    y: action.y,
-                    direction: action.direction,
-                },
-            };
+        case 'SET_CURSOR': {
+            const { x, y, direction } = action;
+            return { ...state, cursor: { x, y, direction } };
+        }
+        case 'TURN_CURSOR_LEFT': {
+            if (!state.cursor) return state;
+            const { x, y, direction } = state.cursor;
+            const newDirection = directions[(directions.indexOf(direction) + 3) % 4];
+            return { ...state, cursor: { x, y, direction: newDirection } };
+        }
+        case 'TURN_CURSOR_RIGHT': {
+            if (!state.cursor) return state;
+            const { x, y, direction } = state.cursor;
+            const newDirection = directions[(directions.indexOf(direction) + 1) % 4];
+            return { ...state, cursor: { x, y, direction: newDirection } };
+        }
+        case 'MOVE_CURSOR_FORWARD': {
+            if (!state.cursor) return state;
+            const project = state.projects.find(p => p.id === state.projectId);
+            const map = project?.maps.find(m => m.id === state.mapId);
+            if (!map) return state;
+
+            const { x, y, direction } = state.cursor;
+            const { width, height } = map.model;
+            switch (direction) {
+                case 'east':
+                    return { ...state, cursor: { x: (x + 1) % width, y, direction } };
+                case 'west':
+                    return { ...state, cursor: { x: (x + width - 1) % width, y, direction } };
+                case 'south':
+                    return { ...state, cursor: { x, y: (y + 1) % height, direction } };
+                case 'north':
+                    return { ...state, cursor: { x, y: (y + height - 1) % height, direction } };
+            }
+        }
+        case 'CLEAR_CURSOR':
+            return { ...state, cursor: undefined };
         case 'SET_MAP_NAME':
         case 'SET_MAP_FLOOR':
         case 'SET_MAP_NOTES':

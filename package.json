@@ -6,7 +6,8 @@
   "author": "Anders Hellerup Madsen <ahm@issuu.com>",
   "license": "MIT",
   "scripts": {
-    "storybook": "start-storybook"
+    "storybook": "start-storybook",
+    "build": "webpack -p --mode=production"
   },
   "devDependencies": {
     "@babel/core": "^7.8.3",

@@ -1,19 +1,9 @@
 import React from 'react';
 import { primary, primaryLight } from '../design-tokens';
 
-import { Direction } from '../types';
+import { Cursor as T } from '../types';
 
-export const Cursor = ({
-    x,
-    y,
-    direction,
-    strokeWidth,
-}: {
-    x: number;
-    y: number;
-    direction: Direction;
-    strokeWidth: number;
-}) => {
+export const Cursor = ({ x, y, direction, strokeWidth }: { strokeWidth: number } & T) => {
     const transform = ({
         south: 'rotate(180)',
         west: 'rotate(270)',
