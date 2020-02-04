@@ -4,6 +4,8 @@ import {
     setHorizontalEdge,
     setVerticalEdge,
     setText,
+    expandHorizontally,
+    expandVertically,
     MapModel,
     Floor,
     Edge,
@@ -26,6 +28,8 @@ export type State = {
 };
 
 type MapAction =
+    | { type: 'EXPAND_HORIZONTALLY' }
+    | { type: 'EXPAND_VERTICALLY' }
     | { type: 'SET_MAP_NAME'; name: string }
     | { type: 'SET_MAP_FLOOR'; x: number; y: number; value: Floor }
     | { type: 'CHANGE_MAP_FLOOR'; x: number; y: number }
@@ -115,6 +119,10 @@ const mapReducer = (state: Map, action: MapAction): Map => {
                 };
             }
         }
+        case 'EXPAND_HORIZONTALLY':
+            return { ...state, model: expandHorizontally(state.model, 1) };
+        case 'EXPAND_VERTICALLY':
+            return { ...state, model: expandVertically(state.model, 1) };
     }
 };
 
@@ -180,6 +188,8 @@ export const reducer = (state: State, action: Action): State => {
         case 'SET_MAP_EDGE':
         case 'CHANGE_MAP_EDGE':
         case 'CHANGE_MAP_FLOOR':
+        case 'EXPAND_VERTICALLY':
+        case 'EXPAND_HORIZONTALLY':
             return {
                 ...state,
                 maps: state.maps.map(m => (m.id === state.mapId ? mapReducer(m, action) : m)),

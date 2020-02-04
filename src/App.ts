@@ -138,6 +138,8 @@ export const App = () => {
                 dispatch({ type: 'NEW_PROJECT', name });
             }
         },
+        onExpandVertialClick: () => dispatch({ type: 'EXPAND_VERTICALLY' }),
+        onExpandHorizontalClick: () => dispatch({ type: 'EXPAND_HORIZONTALLY' }),
         onFloorClick: clickFloor,
         onEdgeClick: clickEdge,
         projectName: state.projectName,

@@ -39,3 +39,19 @@ export function set2d<T>(
         colIdx === x && rowIdx === y ? value : existingValue,
     );
 }
+
+export function resize2d<T>(
+    arr: readonly (readonly T[])[],
+    width: number,
+    height: number,
+    f: () => T,
+): readonly (readonly T[])[] {
+    let res: T[][] = [];
+    for (let y = 0; y < height; y++) {
+        res[y] = [];
+        for (let x = 0; x < width; x++) {
+            res[y][x] = y < arr.length && x < arr[y].length ? arr[y][x] : f();
+        }
+    }
+    return res;
+}

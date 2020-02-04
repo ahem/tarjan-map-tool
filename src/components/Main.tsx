@@ -53,6 +53,8 @@ type Props = {
     notes?: React.ComponentProps<typeof Notes>['editorState'];
     onAddMapClick?: () => void;
     onEdgeClick?: (x: number, y: number, orientation: 'horizontal' | 'vertical') => void;
+    onExpandHorizontalClick?: () => void;
+    onExpandVertialClick?: () => void;
     onFloorClick?: React.ComponentProps<typeof Map>['onFloorClick'];
     onMapClick?: (id: number) => void;
     onNewProjectClick?: () => void;
@@ -67,13 +69,15 @@ export const Main = ({
     mapModel,
     mapName,
     maps,
+    notes,
     onAddMapClick,
     onEdgeClick,
+    onExpandHorizontalClick,
+    onExpandVertialClick,
     onFloorClick,
     onMapClick,
     onNewProjectClick,
     projectName,
-    notes,
     setNotes,
 }: Props) => {
     return (
@@ -84,6 +88,8 @@ export const Main = ({
                 onMapClick={onMapClick}
                 onAddMapClick={onAddMapClick}
                 onNewProjectClick={onNewProjectClick}
+                onExpandVertialClick={onExpandVertialClick}
+                onExpandHorizontalClick={onExpandHorizontalClick}
             />
             <Wrapper>
                 <Infobar mapName={mapName} hoverPosition={hoverPosition} />

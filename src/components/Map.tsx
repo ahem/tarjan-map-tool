@@ -46,10 +46,10 @@ type Props = {
         keys: { shift: boolean; meta: boolean; ctrl: boolean },
     ) => void;
     onEdgeClick?: (x: number, y: number, orientation: 'horizontal' | 'vertical') => void;
-    onHover: (pos?: { x: number; y: number }) => void;
+    onHover?: (pos?: { x: number; y: number }) => void; // TODO
 };
 
-export const Map = ({ model, cursor, onFloorClick, onEdgeClick, onHover }: Props) => {
+export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
     const handleFloorClick = useCallback(
         (e: React.MouseEvent<SVGGElement, MouseEvent>) => {
             const coords = getCoords(e);

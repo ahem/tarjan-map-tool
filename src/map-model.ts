@@ -1,4 +1,4 @@
-import { init2d, set2d, map2d } from './2d-array-utils';
+import { init2d, set2d, map2d, resize2d } from './2d-array-utils';
 
 export type Edge = 'empty' | 'door' | 'wall';
 
@@ -34,6 +34,26 @@ export function init(width: number, height: number): MapModel {
         texts: [],
         width,
         height,
+    };
+}
+
+export function expandHorizontally(t: MapModel, n: number): MapModel {
+    return {
+        ...t,
+        floors: resize2d(t.floors, t.width + n, t.height, () => 'unknown'),
+        horizontalEdges: resize2d(t.horizontalEdges, t.width + n, t.height + 1, () => 'empty'),
+        verticalEdges: resize2d(t.verticalEdges, t.width + 1 + n, t.height, () => 'empty'),
+        width: t.width + n,
+    };
+}
+
+export function expandVertically(t: MapModel, n: number): MapModel {
+    return {
+        ...t,
+        floors: resize2d(t.floors, t.width, t.height + n, () => 'unknown'),
+        horizontalEdges: resize2d(t.horizontalEdges, t.width, t.height + 1 + n, () => 'empty'),
+        verticalEdges: resize2d(t.verticalEdges, t.width + 1, t.height + n, () => 'empty'),
+        height: t.height + n,
     };
 }
 

@@ -44,6 +44,8 @@ type Props = {
     projectName?: string;
     maps: readonly { name: string; id: number; selected?: boolean }[];
     onAddMapClick?: () => void;
+    onExpandHorizontalClick?: () => void;
+    onExpandVertialClick?: () => void;
     onMapClick?: (id: number) => void;
     onNewProjectClick?: () => void;
 };
@@ -51,8 +53,10 @@ type Props = {
 export const Sidebar = ({
     projectName,
     maps,
-    onMapClick,
     onAddMapClick,
+    onExpandHorizontalClick,
+    onExpandVertialClick,
+    onMapClick,
     onNewProjectClick,
 }: Props) => (
     <Root>
@@ -69,6 +73,8 @@ export const Sidebar = ({
         <List>
             <Item onClick={onAddMapClick}>Add map</Item>
             <Item onClick={onNewProjectClick}>New Project</Item>
+            <Item onClick={onExpandHorizontalClick}>Expand Horizontally</Item>
+            <Item onClick={onExpandVertialClick}>Expand Vertically</Item>
         </List>
     </Root>
 );
