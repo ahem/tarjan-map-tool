@@ -1,18 +1,29 @@
-import React, { useState, useEffect, useReducer, useCallback } from 'react';
-import { Main } from './Main';
-import { reducer, initialState } from '../reducer';
-import { selectCurrentProject, selectCurrentMap } from '../selectors';
+import React, { useEffect, useReducer, useCallback } from 'react';
+import { Main } from './components/Main';
+import { reducer, initialState } from './reducer';
+import { selectCurrentMap } from './selectors';
+import { loadFromLocalStorage, saveToLocalStorage } from './localStorage';
+import { getCell } from './map-model';
 
 export const App = () => {
-    const [state, dispatch] = useReducer<typeof reducer>(reducer, initialState);
-    const [shiftDown, setShiftDown] = useState(false);
+    const [state, dispatch] = useReducer<typeof reducer>(
+        reducer,
+        loadFromLocalStorage() || initialState,
+    );
 
-    const onKeyDown = useCallback((e: KeyboardEvent) => setShiftDown(e.shiftKey), [setShiftDown]);
+    useEffect(() => {
+        const interval = setInterval(() => saveToLocalStorage(state), 1000);
+        return () => clearInterval(interval);
+    }, [state]);
 
     const onKeyUp = useCallback(
         (e: KeyboardEvent) => {
-            setShiftDown(e.shiftKey);
             switch (e.key) {
+                case 't':
+                    if (state.cursor) {
+                        return setText(state.cursor.x, state.cursor.y);
+                    }
+                    break;
                 case 'ArrowUp':
                     if (state.cursor && e.shiftKey) {
                         const { x, y, direction } = state.cursor;
@@ -68,28 +79,41 @@ export const App = () => {
                     return dispatch({ type: 'CLEAR_CURSOR' });
             }
         },
-        [setShiftDown, state],
+        [state],
     );
 
     useEffect(() => {
         window.addEventListener('keyup', onKeyUp, false);
-        window.addEventListener('keydown', onKeyDown, false);
         return () => {
             window.removeEventListener('keyup', onKeyUp, false);
-            window.removeEventListener('keydown', onKeyDown, false);
         };
-    }, [onKeyUp, onKeyDown]);
+    }, [onKeyUp]);
 
-    const currentProject = selectCurrentProject(state);
     const currentMap = selectCurrentMap(state);
 
-    const clickFloor = (x: number, y: number) => {
-        if (shiftDown) {
-            dispatch({ type: 'SET_CURSOR', x, y, direction: 'north' });
-        } else {
-            dispatch({ type: 'CHANGE_MAP_FLOOR', x, y });
-        }
-    };
+    const setText = useCallback(
+        (x: number, y: number) => {
+            const currentText = currentMap ? getCell(currentMap.model, x, y).text : undefined;
+            const text = prompt(`enter text for [${x}, ${y}]:`, currentText);
+            if (typeof text === 'string') {
+                dispatch({ type: 'SET_MAP_CELL_TEXT', x, y, text });
+            }
+        },
+        [currentMap],
+    );
+
+    const clickFloor = useCallback(
+        (x: number, y: number, keys: { shift: boolean; meta: boolean; ctrl: boolean }) => {
+            if (keys.shift) {
+                dispatch({ type: 'SET_CURSOR', x, y, direction: 'north' });
+            } else if (keys.meta) {
+                setText(x, y);
+            } else {
+                dispatch({ type: 'CHANGE_MAP_FLOOR', x, y });
+            }
+        },
+        [setText],
+    );
 
     const clickEdge = (x: number, y: number, orientation: 'vertical' | 'horizontal') => {
         dispatch({ type: 'CHANGE_MAP_EDGE', x, y, orientation });
@@ -100,27 +124,23 @@ export const App = () => {
         name && dispatch({ type: 'ADD_MAP', name });
     };
 
-    const addProject = () => {
-        const name = prompt('Enter name:', 'unnamed map');
-        name && dispatch({ type: 'ADD_PROJECT', name });
-    };
-
-    return (
-        <Main
-            cursor={state.cursor}
-            mapModel={currentMap?.model}
-            mapName={currentMap?.name}
-            maps={currentProject?.maps || []}
-            notes={currentMap?.notes}
-            onAddMapClick={addMap}
-            onAddProjectClick={addProject}
-            onMapClick={mapId => dispatch({ type: 'SELECT_MAP', mapId })}
-            onProjectClick={projectId => dispatch({ type: 'SELECT_PROJECT', projectId })}
-            onFloorClick={clickFloor}
-            onEdgeClick={clickEdge}
-            projectName={currentProject?.name}
-            projects={state.projects}
-            setNotes={editorState => dispatch({ type: 'SET_MAP_NOTES', editorState })}
-        />
-    );
+    return React.createElement(Main, {
+        cursor: state.cursor,
+        mapModel: currentMap?.model,
+        mapName: currentMap?.name,
+        maps: state.maps,
+        notes: currentMap?.notes,
+        onAddMapClick: addMap,
+        onMapClick: mapId => dispatch({ type: 'SELECT_MAP', mapId }),
+        onNewProjectClick: () => {
+            const name = prompt('Enter project name');
+            if (typeof name === 'string') {
+                dispatch({ type: 'NEW_PROJECT', name });
+            }
+        },
+        onFloorClick: clickFloor,
+        onEdgeClick: clickEdge,
+        projectName: state.projectName,
+        setNotes: editorState => dispatch({ type: 'SET_MAP_NOTES', editorState }),
+    });
 };

@@ -40,15 +40,26 @@ type Props = {
         y: number;
         direction: Direction;
     };
-    onFloorClick?: (x: number, y: number) => void;
+    onFloorClick?: (
+        x: number,
+        y: number,
+        keys: { shift: boolean; meta: boolean; ctrl: boolean },
+    ) => void;
     onEdgeClick?: (x: number, y: number, orientation: 'horizontal' | 'vertical') => void;
+    onHover: (pos?: { x: number; y: number }) => void;
 };
 
-export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
+export const Map = ({ model, cursor, onFloorClick, onEdgeClick, onHover }: Props) => {
     const handleFloorClick = useCallback(
         (e: React.MouseEvent<SVGGElement, MouseEvent>) => {
             const coords = getCoords(e);
-            coords && onFloorClick && onFloorClick(coords.x, coords.y);
+            coords &&
+                onFloorClick &&
+                onFloorClick(coords.x, coords.y, {
+                    shift: e.shiftKey,
+                    meta: e.metaKey,
+                    ctrl: e.ctrlKey,
+                });
         },
         [onFloorClick],
     );

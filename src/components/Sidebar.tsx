@@ -43,21 +43,17 @@ const Item = styled.li<{ selected?: boolean }>`
 type Props = {
     projectName?: string;
     maps: readonly { name: string; id: number; selected?: boolean }[];
-    projects: readonly { name: string; id: number; selected?: boolean }[];
-    onMapClick?: (id: number) => void;
-    onProjectClick?: (id: number) => void;
     onAddMapClick?: () => void;
-    onAddProjectClick?: () => void;
+    onMapClick?: (id: number) => void;
+    onNewProjectClick?: () => void;
 };
 
 export const Sidebar = ({
     projectName,
     maps,
-    projects,
     onMapClick,
     onAddMapClick,
-    onProjectClick,
-    onAddProjectClick,
+    onNewProjectClick,
 }: Props) => (
     <Root>
         <Header>{projectName || ''}</Header>
@@ -68,24 +64,11 @@ export const Sidebar = ({
                     {name}
                 </Item>
             ))}
-            <Item onClick={onAddMapClick}>
-                <i>[ add map ]</i>
-            </Item>
         </List>
-        <SubHeader>Projects</SubHeader>
+        <SubHeader>Actions</SubHeader>
         <List>
-            {projects.map(({ name, id, selected }) => (
-                <Item
-                    key={id}
-                    selected={selected}
-                    onClick={onProjectClick && (() => onProjectClick(id))}
-                >
-                    {name}
-                </Item>
-            ))}
-            <Item onClick={onAddProjectClick}>
-                <i>[ add project ]</i>
-            </Item>
+            <Item onClick={onAddMapClick}>Add map</Item>
+            <Item onClick={onNewProjectClick}>New Project</Item>
         </List>
     </Root>
 );

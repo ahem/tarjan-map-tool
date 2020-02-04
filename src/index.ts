@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { App } from './components/App';
+import { App } from './App';
 
 const el = document.getElementById('tarjan-root');
-el && ReactDOM.render(<App />, el);
+el && ReactDOM.render(React.createElement(App), el);
 

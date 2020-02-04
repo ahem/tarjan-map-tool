@@ -50,15 +50,14 @@ type Props = {
     mapModel?: MapModel;
     mapName?: string;
     maps: readonly { name: string; id: number; selected?: boolean }[];
+    notes?: React.ComponentProps<typeof Notes>['editorState'];
     onAddMapClick?: () => void;
-    onAddProjectClick?: () => void;
     onEdgeClick?: (x: number, y: number, orientation: 'horizontal' | 'vertical') => void;
-    onFloorClick?: (x: number, y: number) => void;
+    onFloorClick?: React.ComponentProps<typeof Map>['onFloorClick'];
     onMapClick?: (id: number) => void;
+    onNewProjectClick?: () => void;
     onProjectClick?: (id: number) => void;
     projectName?: string;
-    projects: readonly { name: string; id: number; selected?: boolean }[];
-    notes?: React.ComponentProps<typeof Notes>['editorState'];
     setNotes?: React.ComponentProps<typeof Notes>['setEditorState'];
 };
 
@@ -69,13 +68,11 @@ export const Main = ({
     mapName,
     maps,
     onAddMapClick,
-    onAddProjectClick,
     onEdgeClick,
     onFloorClick,
     onMapClick,
-    onProjectClick,
+    onNewProjectClick,
     projectName,
-    projects,
     notes,
     setNotes,
 }: Props) => {
@@ -84,11 +81,9 @@ export const Main = ({
             <Sidebar
                 projectName={projectName}
                 maps={maps}
-                projects={projects}
                 onMapClick={onMapClick}
                 onAddMapClick={onAddMapClick}
-                onProjectClick={onProjectClick}
-                onAddProjectClick={onAddProjectClick}
+                onNewProjectClick={onNewProjectClick}
             />
             <Wrapper>
                 <Infobar mapName={mapName} hoverPosition={hoverPosition} />

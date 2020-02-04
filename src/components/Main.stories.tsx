@@ -41,15 +41,9 @@ export const Standard = () => (
                 { name: 'Catacombs Level 1', id: 10 },
                 { name: 'Catacombs Level 2', id: 12 },
             ]}
-            projects={[
-                { name: 'Bard’s Tale: Tales of the Unknown', id: 1, selected: true },
-                { name: 'Buck Rogers: Countdown to Doomsday', id: 2 },
-            ]}
             onMapClick={action('select map')}
-            onProjectClick={action('select project')}
             hoverPosition={{ x: 4, y: 9 }}
             onAddMapClick={action('add map')}
-            onAddProjectClick={action('add project')}
         ></Main>
     </>
 );

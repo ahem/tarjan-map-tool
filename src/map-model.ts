@@ -49,8 +49,17 @@ export function setFloor(t: MapModel, x: number, y: number, value: Floor): MapMo
     return { ...t, floors: set2d(t.floors, x, y, value) };
 }
 
-export function setText(t: MapModel, x: number, y: number, value: string): MapModel {
-    return { ...t, texts: t.texts.filter(o => o.x !== x && o.y !== y).concat({ x, y, value }) };
+export function setText(
+    t: MapModel,
+    x: number,
+    y: number,
+    value: string | undefined | null,
+): MapModel {
+    const texts = t.texts.filter(o => o.x !== x || o.y !== y);
+    if (value) {
+        return { ...t, texts: texts.concat({ x, y, value }) };
+    }
+    return { ...t, texts };
 }
 
 export function setCell(t: MapModel, x: number, y: number, cell: Cell): MapModel {
