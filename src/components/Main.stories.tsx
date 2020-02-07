@@ -42,7 +42,6 @@ export const Standard = () => (
                 { name: 'Catacombs Level 2', id: 12 },
             ]}
             onMapClick={action('select map')}
-            hoverPosition={{ x: 4, y: 9 }}
             onAddMapClick={action('add map')}
         ></Main>
     </>

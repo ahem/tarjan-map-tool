@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { MapModel } from '../map-model';
@@ -7,6 +7,8 @@ import { Infobar } from './InfoBar';
 import { Map } from './Map';
 import { Notes } from './Notes';
 import { Direction } from '../types';
+
+import { useDebounce } from '../useDebounce';
 
 const Root = styled.div`
     display: flex;
@@ -46,7 +48,6 @@ type Props = {
         x: number;
         y: number;
     };
-    hoverPosition?: { x: number; y: number };
     mapModel?: MapModel;
     mapName?: string;
     maps: readonly { name: string; id: number; selected?: boolean }[];
@@ -65,7 +66,6 @@ type Props = {
 
 export const Main = ({
     cursor,
-    hoverPosition,
     mapModel,
     mapName,
     maps,
@@ -80,6 +80,7 @@ export const Main = ({
     projectName,
     setNotes,
 }: Props) => {
+    const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number } | undefined>();
     return (
         <Root>
             <Sidebar
@@ -101,6 +102,7 @@ export const Main = ({
                                 cursor={cursor}
                                 onFloorClick={onFloorClick}
                                 onEdgeClick={onEdgeClick}
+                                onHover={setHoverPosition}
                             />
                         )}
                     </MapWrapper>

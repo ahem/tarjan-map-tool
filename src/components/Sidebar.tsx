@@ -44,10 +44,12 @@ type Props = {
     projectName?: string;
     maps: readonly { name: string; id: number; selected?: boolean }[];
     onAddMapClick?: () => void;
+    onDeleteMapClick?: () => void;
     onExpandHorizontalClick?: () => void;
     onExpandVertialClick?: () => void;
     onMapClick?: (id: number) => void;
     onNewProjectClick?: () => void;
+    onRenameMapClick?: () => void;
 };
 
 export const Sidebar = ({
@@ -58,6 +60,8 @@ export const Sidebar = ({
     onExpandVertialClick,
     onMapClick,
     onNewProjectClick,
+    onRenameMapClick,
+    onDeleteMapClick,
 }: Props) => (
     <Root>
         <Header>{projectName || ''}</Header>
@@ -72,9 +76,11 @@ export const Sidebar = ({
         <SubHeader>Actions</SubHeader>
         <List>
             <Item onClick={onAddMapClick}>Add map</Item>
-            <Item onClick={onNewProjectClick}>New Project</Item>
+            <Item onClick={onRenameMapClick}>Rename Map</Item>
+            <Item onClick={onDeleteMapClick}>Delete Map</Item>
             <Item onClick={onExpandHorizontalClick}>Expand Horizontally</Item>
             <Item onClick={onExpandVertialClick}>Expand Vertically</Item>
+            <Item onClick={onNewProjectClick}>New Project</Item>
         </List>
     </Root>
 );

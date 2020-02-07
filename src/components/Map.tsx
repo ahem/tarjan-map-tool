@@ -46,10 +46,10 @@ type Props = {
         keys: { shift: boolean; meta: boolean; ctrl: boolean },
     ) => void;
     onEdgeClick?: (x: number, y: number, orientation: 'horizontal' | 'vertical') => void;
-    onHover?: (pos?: { x: number; y: number }) => void; // TODO
+    onHover?: (pos?: { x: number; y: number }) => void;
 };
 
-export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
+export const Map = React.memo(({ model, cursor, onFloorClick, onEdgeClick, onHover }: Props) => {
     const handleFloorClick = useCallback(
         (e: React.MouseEvent<SVGGElement, MouseEvent>) => {
             const coords = getCoords(e);
@@ -77,10 +77,17 @@ export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
         },
         [onEdgeClick],
     );
+
     return (
-        <svg viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}>
+        <svg
+            viewBox={`-5 -5 ${model.width * unit + 10} ${model.height * unit + 10}`}
+            onMouseLeave={onHover ? () => onHover() : undefined}
+        >
             <FloorPatterns />
-            <g onClick={handleFloorClick}>
+            <g
+                onClick={handleFloorClick}
+                onMouseEnter={onHover ? e => onHover(getCoords(e)) : undefined}
+            >
                 {flatmap2d(model.floors, (value, x, y) => (
                     <Floor
                         key={`${x}:${y}`}
@@ -127,4 +134,4 @@ export const Map = ({ model, cursor, onFloorClick, onEdgeClick }: Props) => {
             )}
         </svg>
     );
-};
+});
